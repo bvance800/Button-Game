@@ -1,22 +1,22 @@
 import logo from './logo.svg';
 import './App.css';
+import { 
+  createGameRoom,
+  clearGames,
+  getAllGames,
+  joinGameRoom
+ } from './gameUtil';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button onClick={() => createGameRoom('swap-name')}>Create Swap Name Game</button>
+        <button onClick={() => clearGames()}>Clear Games</button>
+        <button onClick={() => getAllGames()}>Get All Games</button>
+        <button onClick={() => joinGameRoom()}>Join Game</button>
+        <input type="text" id="joinGameCode" placeholder="Enter 5 Digit Game Code"></input>
       </header>
     </div>
   );
