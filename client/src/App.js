@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={() => createGameRoom('swap-name')}>Create Swap Name Game</button>
+        <button onClick={() => createGameRoom('name-game')}>Create Name Game</button>
         <button onClick={() => clearGames()}>Clear Games</button>
         <button onClick={() => getAllGames()}>Get All Games</button>
         <button onClick={() => joinGameRoom()}>Join Game</button>

@@ -1,24 +1,9 @@
-import { Server } from "socket.io";
-import express from 'express';
-import http from 'http';
-
-const app = express()
-const server = http.createServer(app);
-const port = process.env.PORT || 8080
-const io = new Server(server);
-
-app.use(express.json());
-server.listen(port);
-
+import { directory } from "../games/game-directory.js";
 const alphaCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const otherCharacters = '0123456789!@#&';
 
 let currentGames = [];
-const registeredGames = {
-  'swap-name':{
-      minPlayers: 2
-  }
-}
+const registeredGames = directory;
 
 function clearGames(){
   currentGames = [];
@@ -36,15 +21,6 @@ function createGame(gameType){
   return game;
 }
 
-function getRegisteredGame(gameType){
-  console.log(gameType);
-  console.log(registeredGames)
-  if(!registeredGames.hasOwnProperty(gameType)){
-    console.log("sorry no game type:", gameType)
-    return null;
-  }
-  return registeredGames[gameType];
-}
 
 function createId(length = 5, characters = alphaCharacters){
   let result           = '';
@@ -163,6 +139,18 @@ function handleCreateGame(req, res){
   sendResponse(res, success, data)
 }
 
+function getRegisteredGame(gameType){
+  let foundGameIndex = -1;
+  foundGameIndex = registeredGames.findIndex((gameInfo) => {
+    return gameInfo.id === gameType
+  })
+  if(foundGameIndex < 0){
+    console.log("sorry no game type:", gameType)
+    return null;
+  }
+  return registeredGames[foundGameIndex];
+}
+
 function handleClearAllGames(req, res){
   const data = null;
   const message = "Cleared all games from server";
@@ -179,31 +167,9 @@ function handleGetAllGames(req, res){
   sendResponse(res, success, data);
 }
 
-// BEGIN ENDPOINTS
-app.post('/create-room', (req, res) => {
-  handleCreateGame(req, res);
-})
-
-app.post('/clear-games', (req, res) => {
-  handleClearAllGames(req, res);
-})
-
-app.get('/get-all-games', (req, res) => {
-  handleGetAllGames(req, res)
-})
-
-app.post('/join-game', (req, res) => {
-  console.log('Request to join game received')
-  handleJoinGame(req, res);
-})
-
-io.on("connection", (socket) => {
-  // send a message to the client
-  socket.emit("hello from server", 1, "2", { 3: Buffer.from([4]) });
-
-  // receive a message from the client
-  socket.on("hello from client", (...args) => {
-    // ...
-  });
-});
-// END ENDPOINTS
+export {
+  handleCreateGame,
+  handleClearAllGames,
+  handleGetAllGames,
+  handleJoinGame
+};
