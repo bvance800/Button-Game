@@ -1,9 +1,8 @@
-import { directory } from "../games/game-directory.js";
+import * as GameDirectory from "../games/game-directory.js";
 const alphaCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const otherCharacters = '0123456789!@#&';
 
 let currentGames = [];
-const registeredGames = directory;
 
 function clearGames(){
   currentGames = [];
@@ -123,8 +122,8 @@ function handleCreateGame(req, res){
   let success = true;
   let data = {};
   let message = "";
-  const gameType = req.body.type;
-  const registeredGame = getRegisteredGame(gameType)
+  const gameId = req.body.type;
+  const registeredGame = GameDirectory.getRegisteredGame(gameId)
 
   if(!registeredGame){
     message = "Game type does not exist";
@@ -133,23 +132,13 @@ function handleCreateGame(req, res){
     return;
   }
 
-  const newGame = createGame(gameType);
+  const newGame = createGame(gameId);
   currentGames.push(newGame);
   data.game = newGame;
   sendResponse(res, success, data)
 }
 
-function getRegisteredGame(gameType){
-  let foundGameIndex = -1;
-  foundGameIndex = registeredGames.findIndex((gameInfo) => {
-    return gameInfo.id === gameType
-  })
-  if(foundGameIndex < 0){
-    console.log("sorry no game type:", gameType)
-    return null;
-  }
-  return registeredGames[foundGameIndex];
-}
+
 
 function handleClearAllGames(req, res){
   const data = null;
